@@ -4,7 +4,7 @@ Basically the hello world equivalent of emulator develpment. I decided to develo
 
 ## Installation  
 
-Follow These steps to install and run the Emulator:  
+Once SDL3 is installed on your system, follow these steps to install and run the Emulator:  
 
 ```bash  
 git clone
