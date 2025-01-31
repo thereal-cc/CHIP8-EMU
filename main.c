@@ -2,6 +2,14 @@
 #include "src/interface.h"
 
 int main(int argc, char *argv[]) {
+    char *rompath;
+    if (argc != 2) {
+        printf("No File Loaded, Using Test Rom\n");
+        rompath = "tests/1-chip8-logo.ch8";
+    } else {
+        rompath = argv[1];
+    }
+
     // Initialize CPU and Display
     chip8_t chip8;
     interface_t interface;
@@ -11,20 +19,18 @@ int main(int argc, char *argv[]) {
     memset(&interface, 0, sizeof(interface_t));  
 
     init_cpu(&chip8);
-    puts("[OK] Chip8 is Up and Running!");
+    printf("[OK] Chip8 is Up and Running!\n");
 
     init_interface(&interface);
-    puts("[OK] Interface is Up and Running!");
+    printf("[OK] Interface is Up and Running!\n");
 
-    u8 status = load_rom("./tests/1-chip8-logo.ch8", &chip8);
+    u8 status = load_rom(rompath, &chip8);
     if (status != 1) {
-        puts("[ERROR] Unable to load rom");
+        printf("[ERROR] Unable to load rom\n");
         chip8.state = QUIT;
     } else {
-        puts("[OK] Rom is Up and Running");
+        printf("[OK] Rom is Up and Running!\n");
     }
-
-    print_memory(&chip8);
 
     while (chip8.state != QUIT) {
         cpu_cycle(&chip8);

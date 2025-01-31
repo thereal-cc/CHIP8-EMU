@@ -17,13 +17,7 @@
 #define STACK_SIZE 48
 #define MAX_MEMORY 0x1000
 
-// Sound
-#define SAMPLE_RATE 44100
-#define AMPLITUDE 28000
-#define FREQUENCY 440
-
 typedef uint8_t u8;
 typedef uint16_t u16;
-typedef int16_t s16;
 
 #endif
