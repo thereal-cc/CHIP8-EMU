@@ -20,4 +20,5 @@ I do not have any plans to implement Audio at this time, as I want to end up por
 - [ ] Improve Input Delay
 - [x] Load Roms from the Command Line
 - [x] Opcode Function Pointers
+- [ ] Super Chip-48 Support
 - [ ] TI-84 Plus CE Port

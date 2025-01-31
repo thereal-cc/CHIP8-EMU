@@ -139,6 +139,9 @@ void chip8_op_8(chip8_t *chip8, u16 opcode, u16 x, u16 y) {
             chip8->V_register[x] *= 2;
             chip8->pc += 2;
             break;
+        default:
+            debug_print("[FAILED] Unknown opcode: 0x%X\n", opcode);
+            break;
     }
 }
 
@@ -209,6 +212,9 @@ void chip8_op_E(chip8_t *chip8, u16 opcode, u16 x, u16 y) {
             }
             chip8->pc += 2;
             break;
+        default:
+            debug_print("[FAILED] Unknown opcode: 0x%X\n", opcode);
+            break;
     }
 }
 
@@ -272,6 +278,9 @@ void chip8_op_F(chip8_t *chip8, u16 opcode, u16 x, u16 y) {
                 chip8->V_register[byte] = chip8->memory[chip8->I_register + byte];
             }
             chip8->pc += 2;
+            break;
+        default:
+            debug_print("[FAILED] Unknown opcode: 0x%X\n", opcode);
             break;
     }
 }

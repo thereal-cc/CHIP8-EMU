@@ -14,7 +14,7 @@ void init_interface(interface_t *interface) {
         exit(EXIT_FAILURE);
     }
 
-    interface->window = SDL_CreateWindow("Chip_8", H_RES * WINDOW_SCALE, V_RES * WINDOW_SCALE, 0);
+    interface->window = SDL_CreateWindow("Chip-8", H_RES * WINDOW_SCALE, V_RES * WINDOW_SCALE, 0);
     if (!interface->window) {
         debug_print("SDL_Window Error: %s\n", SDL_GetError());
         SDL_Quit();
@@ -42,7 +42,7 @@ u8 sdl_ehandler(chip8_t *chip8) {
     
     if (state[SDL_SCANCODE_ESCAPE])  return 0;
     for (u8 keycode = 0; keycode < 16; keycode++) {
-        chip8->keypad[keycode] = state[keymappings[keycode]];
+        chip8->keypad[keycode] = state[keymappings[keycode]] ? 1 : 0;;
     }
 
     return 1;
