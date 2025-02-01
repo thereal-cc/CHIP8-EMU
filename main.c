@@ -41,7 +41,7 @@ int main(int argc, char *argv[]) {
             chip8.draw_flag = 0;
         }
 
-        usleep(1667); // 16.67 ms per frame
+        usleep(2000); // 16.67 ms per frame
     }
 
     stop_interface(&interface);
