@@ -227,7 +227,7 @@ void chip8_op_F(chip8_t *chip8, u16 opcode, u16 x, u16 y) {
             break;
         case 0x000A: // Wait for key press, store key value in Vx
             debug_print("[OK] 0x%X: Fx0A\n", opcode);
-            for (int i = 0; i < 16; i++) {
+            for (u8 i = 0; i < 16; i++) {
                 if (chip8->keypad[i]) {
                     chip8->V_register[x] = i;
                     chip8->pc += 2;

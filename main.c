@@ -1,5 +1,6 @@
 #include "src/chip8.h"
 #include "src/interface.h"
+#include <unistd.h>
 
 int main(int argc, char *argv[]) {
     char *rompath;
@@ -13,7 +14,6 @@ int main(int argc, char *argv[]) {
     // Initialize CPU and Display
     chip8_t chip8;
     interface_t interface;
-    struct timespec req = { 0, 16670000L }; // 0 seconds, 16.67 miliseconds
 
     memset(&chip8, 0, sizeof(chip8_t));
     memset(&interface, 0, sizeof(interface_t));  
@@ -33,14 +33,15 @@ int main(int argc, char *argv[]) {
     }
 
     while (chip8.state != QUIT) {
+        sdl_ehandler(&chip8);
         cpu_cycle(&chip8);
-        chip8.state = sdl_ehandler(&chip8);
 
         if (chip8.draw_flag) {
             draw(&interface, chip8.buffer);
+            chip8.draw_flag = 0;
         }
 
-        nanosleep(&req.tv_sec, &req.tv_nsec);
+        usleep(1667); // 16.67 ms per frame
     }
 
     stop_interface(&interface);

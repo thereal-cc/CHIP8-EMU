@@ -1,13 +1,6 @@
 #include "interface.h"
 #include "utils.h"
 
-u8 keymappings[16] = {
-    SDL_SCANCODE_1, SDL_SCANCODE_2, SDL_SCANCODE_3, SDL_SCANCODE_4,
-    SDL_SCANCODE_Q, SDL_SCANCODE_W, SDL_SCANCODE_E, SDL_SCANCODE_R,
-    SDL_SCANCODE_A, SDL_SCANCODE_S, SDL_SCANCODE_D, SDL_SCANCODE_F,
-    SDL_SCANCODE_Z, SDL_SCANCODE_X, SDL_SCANCODE_C, SDL_SCANCODE_V
-};
-
 void init_interface(interface_t *interface) {
     if (!SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO)) {
         debug_print("SDL_Init Error: %s\n", SDL_GetError());
@@ -30,22 +23,63 @@ void init_interface(interface_t *interface) {
     }
 }
 
-u8 sdl_ehandler(chip8_t *chip8) {
+void sdl_ehandler(chip8_t *chip8) {
     SDL_Event event;
     while (SDL_PollEvent(&event)) {
-        if (event.type == SDL_EVENT_QUIT) {
-            return 0;
+        switch (event.type) {
+            case SDL_EVENT_QUIT:
+                chip8->state = QUIT;
+                break;
+            case SDL_EVENT_KEY_DOWN:
+                switch(event.key.key){
+                    case SDLK_1:chip8->keypad[0x1] = true; break;
+                    case SDLK_2:chip8->keypad[0x2] = true; break;
+                    case SDLK_3:chip8->keypad[0x3] = true; break;
+                    case SDLK_4:chip8->keypad[0xc] = true; break;
+
+                    case SDLK_Q:chip8->keypad[0x4] = true; break;
+                    case SDLK_W:chip8->keypad[0x5] = true; break;
+                    case SDLK_E:chip8->keypad[0x6] = true; break;
+                    case SDLK_R:chip8->keypad[0xd] = true; break;
+
+                    case SDLK_A:chip8->keypad[0x7] = true; break;
+                    case SDLK_S:chip8->keypad[0x8] = true; break;
+                    case SDLK_D:chip8->keypad[0x9] = true; break;
+                    case SDLK_F:chip8->keypad[0xe] = true; break;
+                                
+                    case SDLK_Z:chip8->keypad[0xa] = true; break;
+                    case SDLK_X:chip8->keypad[0x0] = true; break;
+                    case SDLK_C:chip8->keypad[0xb] = true; break;
+                    case SDLK_V:chip8->keypad[0xf] = true; break;
+                    default: break;
+                }
+                break;
+            case SDL_EVENT_KEY_UP:
+                switch(event.key.key){
+                    case SDLK_1:chip8->keypad[0x1] = false; break;
+                    case SDLK_2:chip8->keypad[0x2] = false; break;
+                    case SDLK_3:chip8->keypad[0x3] = false; break;
+                    case SDLK_4:chip8->keypad[0xc] = false; break;
+
+                    case SDLK_Q:chip8->keypad[0x4] = false; break;
+                    case SDLK_W:chip8->keypad[0x5] = false; break;
+                    case SDLK_E:chip8->keypad[0x6] = false; break;
+                    case SDLK_R:chip8->keypad[0xd] = false; break;
+
+                    case SDLK_A:chip8->keypad[0x7] = false; break;
+                    case SDLK_S:chip8->keypad[0x8] = false; break;
+                    case SDLK_D:chip8->keypad[0x9] = false; break;
+                    case SDLK_F:chip8->keypad[0xe] = false; break;
+
+                    case SDLK_Z:chip8->keypad[0xa] = false; break;
+                    case SDLK_X:chip8->keypad[0x0] = false; break;
+                    case SDLK_C:chip8->keypad[0xb] = false; break;
+                    case SDLK_V:chip8->keypad[0xf] = false; break;
+                    default:break;
+                }
+            break;
         }
     }
-
-    const bool* state = SDL_GetKeyboardState(NULL);
-    
-    if (state[SDL_SCANCODE_ESCAPE])  return 0;
-    for (u8 keycode = 0; keycode < 16; keycode++) {
-        chip8->keypad[keycode] = state[keymappings[keycode]] ? 1 : 0;;
-    }
-
-    return 1;
 }
 
 void draw(interface_t *interface, u8 *buffer) {
@@ -73,6 +107,7 @@ void draw(interface_t *interface, u8 *buffer) {
 }
 
 void stop_interface(interface_t *interface) {
+    SDL_DestroyRenderer(interface->renderer);
     SDL_DestroyWindow(interface->window);
     SDL_Quit();
 }

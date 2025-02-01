@@ -1,6 +1,10 @@
-# Chip-8 Emulator (Version 1.1)
+# Chip-8 Emulator (Version 1.2)
 
 Basically the hello world equivalent of emulator develpment. I decided to develop this first before I try something more complex like a 6502 or Z80 Emulator, but I'm proud of the initial state this is in.
+
+# Changelog (Version 1.2)  
+
+Improved input delay, custom rom loading, and proper timing (60hz)
 
 ## Installation  
 
@@ -17,8 +21,9 @@ make clean && make
 
 I do not have any plans to implement Audio at this time, as I want to end up porting this to the TI 84 Plus CE, which obviously has no sound. Besides that, here's a few other features I'd want to add.
 
-- [ ] Improve Input Delay
+- [x] Improve Input Delay
 - [x] Load Roms from the Command Line
 - [x] Opcode Function Pointers
 - [ ] Super Chip-48 Support
 - [ ] TI-84 Plus CE Port
+- [ ] GUI Rom Loading

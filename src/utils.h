@@ -11,7 +11,7 @@
 // Display
 #define H_RES 64
 #define V_RES 32
-#define DEBUG 1
+#define DEBUG 0
 
 // Chip 8
 #define STACK_SIZE 48
