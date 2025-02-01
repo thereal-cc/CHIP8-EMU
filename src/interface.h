@@ -6,11 +6,16 @@
 #include "utils.h"
 #include "chip8.h"
 
-#define WINDOW_SCALE 8
+#define WINDOW_SCALE_REG 8
 
 typedef struct {
     SDL_Window* window;
     SDL_Renderer* renderer;
+    u8 extended; // 0 = 64x32, 1 = 128x64
+    u8 render_width;
+    u8 render_height;
+    u8 render_offset_x;
+    u8 render_offset_y;
 } interface_t;
 
 void init_interface(interface_t *interface);

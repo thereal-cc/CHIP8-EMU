@@ -1,10 +1,10 @@
-# Chip-8 Emulator (Version 1.2)
+# Chip-8 Emulator (Version 1.3)
 
 Basically the hello world equivalent of emulator develpment. I decided to develop this first before I try something more complex like a 6502 or Z80 Emulator, but I'm proud of the initial state this is in.
 
-# Changelog (Version 1.2)  
+# Changelog (Version 1.3)  
 
-Improved input delay, custom rom loading, and proper timing (60hz)
+Cleaned up Code, set up for Super Chip-48 compatability (TBD)
 
 ## Installation  
 

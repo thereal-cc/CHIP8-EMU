@@ -2,12 +2,16 @@
 #include "utils.h"
 
 void init_interface(interface_t *interface) {
+    interface->extended = false;
+    interface->render_width = H_RES;
+    interface->render_height = V_RES;
+
     if (!SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO)) {
         debug_print("SDL_Init Error: %s\n", SDL_GetError());
         exit(EXIT_FAILURE);
     }
 
-    interface->window = SDL_CreateWindow("Chip-8", H_RES * WINDOW_SCALE, V_RES * WINDOW_SCALE, 0);
+    interface->window = SDL_CreateWindow("Chip-8", interface->render_width * WINDOW_SCALE_REG, interface->render_height * WINDOW_SCALE_REG, 0);
     if (!interface->window) {
         debug_print("SDL_Window Error: %s\n", SDL_GetError());
         SDL_Quit();
@@ -89,14 +93,14 @@ void draw(interface_t *interface, u8 *buffer) {
     SDL_RenderClear(interface->renderer);
     SDL_SetRenderDrawColor(interface->renderer, 255, 255, 255, 255);
 
-    for (u8 y = 0; y < V_RES; y++) {
-        for (u8 x = 0; x < H_RES; x++) {
+    for (u8 y = interface->render_offset_y; y < interface->render_height; y++) {
+        for (u8 x = interface->render_offset_x; x < interface->render_width; x++) {
             if (buffer[x + (y * 64)]) {
                 SDL_FRect rect;
-                rect.x = x * WINDOW_SCALE;
-                rect.y = y * WINDOW_SCALE;
-                rect.w = WINDOW_SCALE;
-                rect.h = WINDOW_SCALE;
+                rect.x = x * WINDOW_SCALE_REG;
+                rect.y = y * WINDOW_SCALE_REG;
+                rect.w = WINDOW_SCALE_REG;
+                rect.h = WINDOW_SCALE_REG;
 
                 SDL_RenderFillRect(interface->renderer, &rect);
             }

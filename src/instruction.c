@@ -260,9 +260,9 @@ void chip8_op_F(chip8_t *chip8, u16 opcode, u16 x, u16 y) {
             u8 value = chip8->V_register[x];
             u8 I = chip8->I_register;
             
-            chip8->memory[I] = (value % 1000) / 100; // Hundreds Digit
-            chip8->memory[I + 1] = (value % 100) / 10; // Tens Digit
-            chip8->memory[I + 2] = value % 10; // Ones Digi
+            chip8->memory[I] = value / 100; // Hundreds Digit
+            chip8->memory[I + 1] = (value / 10) % 10; // Tens Digit
+            chip8->memory[I + 2] = value % 10; // Ones Digit
             chip8->pc += 2;
             break;
         case 0x0055: // Store registers V0 through Vx in memory starting at location I

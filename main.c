@@ -3,14 +3,6 @@
 #include <unistd.h>
 
 int main(int argc, char *argv[]) {
-    char *rompath;
-    if (argc != 2) {
-        printf("No File Loaded, Using Test Rom\n");
-        rompath = "tests/1-chip8-logo.ch8";
-    } else {
-        rompath = argv[1];
-    }
-
     // Initialize CPU and Display
     chip8_t chip8;
     interface_t interface;
@@ -24,13 +16,14 @@ int main(int argc, char *argv[]) {
     init_interface(&interface);
     printf("[OK] Interface is Up and Running!\n");
 
+    char *rompath = (argc != 2) ? (printf("No File Loaded, Using Test Rom\n"), "tests/1-chip8-logo.ch8") : argv[1];
     u8 status = load_rom(rompath, &chip8);
     if (status != 1) {
         printf("[ERROR] Unable to load rom\n");
-        chip8.state = QUIT;
-    } else {
-        printf("[OK] Rom is Up and Running!\n");
-    }
+        return EXIT_FAILURE;
+    } 
+
+    printf("[OK] Rom is Up and Running!\n");
 
     while (chip8.state != QUIT) {
         sdl_ehandler(&chip8);
@@ -41,7 +34,7 @@ int main(int argc, char *argv[]) {
             chip8.draw_flag = 0;
         }
 
-        usleep(2000); // 16.67 ms per frame
+        SDL_Delay(16.67); // 16.67 ms (60 FPS)
     }
 
     stop_interface(&interface);
