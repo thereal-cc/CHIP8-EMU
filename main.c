@@ -30,25 +30,25 @@ int main(int argc, char *argv[]) {
         sdl_ehandler(&chip8);
 
         // Update Timers
-        /*
         u32 current_time = SDL_GetTicks();
         if (current_time - last_time >= timer_interval) {
             last_time = current_time;
             update_timers(&chip8);
             last_time = current_time;
         }
-        */
-       update_timers(&chip8);
 
         // Execute CPU Cycle
-        cpu_cycle(&chip8);
+        for (u8 i = 0; i < CYCLES_PER_SEC; i++) {
+            if (chip8.draw_flag == 1) {
+                break;
+            }
+            cpu_cycle(&chip8);
+        }   
 
-        if (chip8.draw_flag) {
-            draw(&interface, chip8.buffer);
-            chip8.draw_flag = 0;
-        }
+        draw(&interface, chip8.buffer);
+        chip8.draw_flag = 0;
 
-        SDL_Delay(16); // 16.67 ms (60 FPS)
+        SDL_Delay(32); // 16.67 ms (60 FPS)
     }
 
     stop_interface(&interface);

@@ -72,11 +72,9 @@ void update_timers(chip8_t *chip8)
     // Decreament Delay/Sound Timers
     if (chip8->delay_timer > 0) chip8->delay_timer -= 1;
     if (chip8->sound_timer > 0) {
+        printf("BEEP\n");
         chip8->sound_timer -= 1;
-        if (chip8->sound_timer == 0) {
-            chip8->sound_flag = 1;
-            printf("BEEP\n");
-        }
+        if (chip8->sound_timer == 0) chip8->sound_flag += 1;
     }
 }
 
