@@ -15,6 +15,7 @@ int main(int argc, char *argv[]) {
     init_interface(&interface);
     printf("[OK] Interface is Up and Running!\n");
 
+    // Load Rom
     char *rompath = (argc != 2) ? (printf("No File Loaded, Using Test Rom\n"), "tests/1-chip8-logo.ch8") : argv[1];
     u8 status = load_rom(rompath, &chip8);
     if (status != 1) {

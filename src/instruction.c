@@ -87,18 +87,18 @@ void chip8_op_8(chip8_t *chip8, u16 opcode, u16 x, u16 y) {
             break;
         case 0x01: // Vx = Vx OR Vy
             debug_print("[OK] 0x%X: 8xy1\n", opcode);
-            chip8->V_register[0xF] = 0;
             chip8->V_register[x] = (chip8->V_register[x] | chip8->V_register[y]);
+            if (!isQuirkEnabled(chip8, QUIRK_VF_RESET)) chip8->V_register[0xF] = 0;
             break;
         case 0x02: // Vx = Vx AND Vy
             debug_print("[OK] 0x%X: 8xy2\n", opcode);
-            chip8->V_register[0xF] = 0;
             chip8->V_register[x] = (chip8->V_register[x] & chip8->V_register[y]);
+            if (!isQuirkEnabled(chip8, QUIRK_VF_RESET)) chip8->V_register[0xF] = 0;
             break;
         case 0x03: // Vx = Vx XOR Vy
             debug_print("[OK] 0x%X: 8xy3\n", opcode);
-            chip8->V_register[0xF] = 0;
             chip8->V_register[x] ^= chip8->V_register[y];
+            if (!isQuirkEnabled(chip8, QUIRK_VF_RESET)) chip8->V_register[0xF] = 0;
             break;
         case 0x04: // Vx = Vx + Vy, set VF = carry
             debug_print("[OK] 0x%X: 8xy4\n", opcode);
@@ -151,11 +151,8 @@ void chip8_op_A(chip8_t *chip8, u16 opcode, u16 x, u16 y) {
 
 void chip8_op_B(chip8_t *chip8, u16 opcode, u16 x, u16 y) {
     debug_print("[OK] 0x%X: Bnnn\n", opcode);
-    if (!isQuirkEnabled(chip8, QUIRK_JUMP)) {
-        chip8->pc = (opcode & 0x0FFF) + chip8->V_register[0];
-    } else {
-        chip8->pc = (opcode & 0x0FFF) + chip8->V_register[x];
-    }
+    if (!isQuirkEnabled(chip8, QUIRK_JUMP)) chip8->pc = (opcode & 0x0FFF) + chip8->V_register[0];
+    else chip8->pc = (opcode & 0x0FFF) + chip8->V_register[x];
     chip8->increment_pc = false;
 }
 
@@ -210,7 +207,6 @@ void chip8_op_E(chip8_t *chip8, u16 opcode, u16 x, u16 y) {
 }
 
 void chip8_op_F(chip8_t *chip8, u16 opcode, u16 x, u16 y) {
-    u16 I; // Temp for I Register
     switch(opcode & 0x00FF) {
         case 0x0007: // Vx = delay timer
             debug_print("[OK] 0x%X: Fx07\n", opcode);
@@ -253,19 +249,17 @@ void chip8_op_F(chip8_t *chip8, u16 opcode, u16 x, u16 y) {
             break;
         case 0x0055: // Store registers V0 through Vx in memory starting at location I
             debug_print("[OK] 0x%X: Fx55\n", opcode);
-            I = chip8->I_register;
             for (u16 i = 0; i <= x; i++) {
-                chip8->memory[I + i] = chip8->V_register[i];
+                chip8->memory[chip8->I_register + i] = chip8->V_register[i];
             }
-            chip8->I_register += (x + 1);
+            if (!isQuirkEnabled(chip8, QUIRK_LOADS)) chip8->I_register += (x + 1);
             break;
         case 0x0065: // Read registers V0 through Vx from memory starting at location I.
             debug_print("[OK] 0x%X: Fx65\n", opcode);
-            I = chip8->I_register;
             for (u16 i = 0; i <= x; i++) {
-                chip8->V_register[i] = chip8->memory[I + i];
+                chip8->V_register[i] = chip8->memory[chip8->I_register + i];
             }
-            chip8->I_register += (x + 1);
+            if (!isQuirkEnabled(chip8, QUIRK_LOADS)) chip8->I_register += (x + 1);
             break;
         default:
             debug_print("[FAILED] Unknown opcode: 0x%X\n", opcode);

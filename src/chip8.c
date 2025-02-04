@@ -26,7 +26,7 @@ u8 fontset[80] =
 
 void init_cpu(chip8_t *chip8) 
 {
-    srand((unsigned int)time(NULL));
+    srandom((u8)time(NULL));
     memcpy(chip8->memory, fontset, sizeof(fontset)); // Copy Font into Memory
 
     chip8->pc = 0x200;

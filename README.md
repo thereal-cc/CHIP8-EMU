@@ -2,9 +2,9 @@
 
 Basically the hello world equivalent of emulator develpment. This is a warmup for developing a Z80/6502 Emulator, so I hope you enjoy it!
 
-## Changelog (Version 1.4.3)
+## Changelog (Version 1.4.4)
 
-Added Configurable Quirks (Uncomment in main.c to enable)
+Completed most Configurable Quirks (Uncomment in main.c to enable, DISPWAIT and CLIP coming soon)
 
 ## Installation  
 
