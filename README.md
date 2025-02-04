@@ -1,10 +1,10 @@
-# Chip-8 Emulator (Version 1.4.1)
+# Chip-8 Emulator (Version 1.4.2)
 
 Basically the hello world equivalent of emulator develpment. I decided to develop this first before I try something more complex like a 6502 or Z80 Emulator, but I'm proud of the initial state this is in.
 
-# Changelog (Version 1.4.1)  
+## Changelog (Version 1.4.2)
 
-So much cleanup and fixes I don't even kow where to begin. The Corax+ and Flags come back 100%, and the only error in the Quirks Test is a SLOW reading for display waiting. Thank you to ZX Dunny, AEstus Vitae, and Janitor Raus for their tough love and help with this project.
+So much cleanup and fixes I don't even kow where to begin. Thank you to ZX Dunny, AEstus Vitae, and Janitor Raus for their tough love and help with this project.
 
 ## Installation  
 
