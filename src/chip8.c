@@ -78,8 +78,25 @@ void update_timers(chip8_t *chip8)
     }
 }
 
-// Function to print memory
-void print_memory(const chip8_t *chip8) {
+/* Quirk Commands */
+void enableQuirk(chip8_t *chip8, u8 quirk) 
+{
+    chip8->quirks |= (1 << quirk);
+}
+
+void disableQuirk(chip8_t *chip8, u8 quirk) 
+{ 
+    chip8->quirks &= ~(1 << quirk);
+}
+
+u8 isQuirkEnabled(chip8_t *chip8, u8 quirk) 
+{
+    return (chip8->quirks & (1 << quirk)) != 0;
+}
+
+/* Debug Commands */
+void print_memory(const chip8_t *chip8) 
+{
     printf("Memory Dump (4096 bytes):\n");
     for (int i = 0; i < 4096; i += 16) {
         printf("0x%03X: ", i); // Print the memory address

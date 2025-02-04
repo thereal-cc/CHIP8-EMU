@@ -23,6 +23,14 @@ int main(int argc, char *argv[]) {
     } 
     printf("[OK] Rom is Up and Running!\n");
 
+    /* Uncomment to Enable Quirks */
+    //enableQuirk(&chip8, QUIRK_VF_RESET);
+    //enableQuirk(&chip8, QUIRK_LOADS);
+    //enableQuirk(&chip8, QUIRK_DISPWAIT);
+    //enableQuirk(&chip8, QUIRK_CLIP);
+    //enableQuirk(&chip8, QUIRK_SHIFT);
+    //enableQuirk(&chip8, QUIRK_JUMP);
+
     u32 last_time = SDL_GetTicks();
     u32 timer_interval = 1000 / 60;
     while (chip8.state != QUIT) {

@@ -1,10 +1,10 @@
-# Chip-8 Emulator (Version 1.4.2)
+# Chip8-EMU
 
 Basically the hello world equivalent of emulator develpment. I decided to develop this first before I try something more complex like a 6502 or Z80 Emulator, but I'm proud of the initial state this is in.
 
-## Changelog (Version 1.4.2)
+## Changelog (Version 1.4.3)
 
-So much cleanup and fixes I don't even kow where to begin. Thank you to ZX Dunny, AEstus Vitae, and Janitor Raus for their tough love and help with this project.
+Added Configurable Quirks (Uncomment in main.c to enable)
 
 ## Installation  
 
@@ -27,3 +27,7 @@ I do not have any plans to implement Audio at this time, as I want to end up por
 - [ ] Super Chip-48 Support
 - [ ] TI-84 Plus CE Port
 - [ ] GUI Rom Loading
+
+## Credits/Thanks  
+
+Thank you to ZX Dunny, AEstus Vitae, Janitor Raus, and the EmuDev discord for their tough love and help with this project.

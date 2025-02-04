@@ -87,18 +87,18 @@ void chip8_op_8(chip8_t *chip8, u16 opcode, u16 x, u16 y) {
             break;
         case 0x01: // Vx = Vx OR Vy
             debug_print("[OK] 0x%X: 8xy1\n", opcode);
-            chip8->V_register[x] = (chip8->V_register[x] | chip8->V_register[y]);
             chip8->V_register[0xF] = 0;
+            chip8->V_register[x] = (chip8->V_register[x] | chip8->V_register[y]);
             break;
         case 0x02: // Vx = Vx AND Vy
             debug_print("[OK] 0x%X: 8xy2\n", opcode);
-            chip8->V_register[x] = (chip8->V_register[x] & chip8->V_register[y]);
             chip8->V_register[0xF] = 0;
+            chip8->V_register[x] = (chip8->V_register[x] & chip8->V_register[y]);
             break;
         case 0x03: // Vx = Vx XOR Vy
             debug_print("[OK] 0x%X: 8xy3\n", opcode);
-            chip8->V_register[x] ^= chip8->V_register[y];
             chip8->V_register[0xF] = 0;
+            chip8->V_register[x] ^= chip8->V_register[y];
             break;
         case 0x04: // Vx = Vx + Vy, set VF = carry
             debug_print("[OK] 0x%X: 8xy4\n", opcode);
@@ -115,7 +115,7 @@ void chip8_op_8(chip8_t *chip8, u16 opcode, u16 x, u16 y) {
             break;
         case 0x06: // Vx = Vx SHR 1
             debug_print("[OK] 0x%X: 8xy6\n", opcode);
-            chip8->V_register[x] = chip8->V_register[y];
+            if (!isQuirkEnabled(chip8, QUIRK_SHIFT)) chip8->V_register[x] = chip8->V_register[y];
             const bool lsb = (chip8->V_register[x] & 0x1) == 1;
             chip8->V_register[x] >>= 1;
             chip8->V_register[0xF] = lsb;
@@ -128,7 +128,7 @@ void chip8_op_8(chip8_t *chip8, u16 opcode, u16 x, u16 y) {
             break;
         case 0x0E: // Vx = Vx SHL 1
             debug_print("[OK] 0x%X: 8xyE\n", opcode);
-            chip8->V_register[x] = chip8->V_register[y];
+            if (!isQuirkEnabled(chip8, QUIRK_SHIFT)) chip8->V_register[x] = chip8->V_register[y];
             const bool msb = (chip8->V_register[x] >> 7) == 1;
             chip8->V_register[x] <<= 1;
             chip8->V_register[0xF] = msb;
@@ -151,7 +151,11 @@ void chip8_op_A(chip8_t *chip8, u16 opcode, u16 x, u16 y) {
 
 void chip8_op_B(chip8_t *chip8, u16 opcode, u16 x, u16 y) {
     debug_print("[OK] 0x%X: Bnnn\n", opcode);
-    chip8->pc = (opcode & 0x0FFF) + chip8->V_register[0];
+    if (!isQuirkEnabled(chip8, QUIRK_JUMP)) {
+        chip8->pc = (opcode & 0x0FFF) + chip8->V_register[0];
+    } else {
+        chip8->pc = (opcode & 0x0FFF) + chip8->V_register[x];
+    }
     chip8->increment_pc = false;
 }
 
