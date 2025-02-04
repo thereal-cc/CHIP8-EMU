@@ -1,6 +1,6 @@
 # Chip8-EMU
 
-Basically the hello world equivalent of emulator develpment. I decided to develop this first before I try something more complex like a 6502 or Z80 Emulator, but I'm proud of the initial state this is in.
+Basically the hello world equivalent of emulator develpment. This is a warmup for developing a Z80/6502 Emulator, so I hope you enjoy it!
 
 ## Changelog (Version 1.4.3)
 
