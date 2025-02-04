@@ -31,6 +31,7 @@ void init_cpu(chip8_t *chip8)
 
     chip8->pc = 0x200;
     chip8->state = RUNNING;
+    chip8->increment_pc = true;
 
     initialize_opcode_table();
 }
@@ -61,12 +62,21 @@ void cpu_cycle(chip8_t *chip8)
     // Finds Instruction in Opcode Table and Runs it
     opcode_table[highest_nibble](chip8, opcode, x, y);
 
+    // Check whether to increment PC
+    if (chip8->increment_pc) chip8->pc += 2;
+    else chip8->increment_pc = true;
+}
+
+void update_timers(chip8_t *chip8) 
+{
     // Decreament Delay/Sound Timers
     if (chip8->delay_timer > 0) chip8->delay_timer -= 1;
     if (chip8->sound_timer > 0) {
-        chip8->sound_flag = 1;
-        puts("BEEP");
         chip8->sound_timer -= 1;
+        if (chip8->sound_timer == 0) {
+            chip8->sound_flag = 1;
+            printf("BEEP\n");
+        }
     }
 }
 

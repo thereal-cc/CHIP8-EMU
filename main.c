@@ -1,6 +1,5 @@
 #include "src/chip8.h"
 #include "src/interface.h"
-#include <unistd.h>
 
 int main(int argc, char *argv[]) {
     // Initialize CPU and Display
@@ -22,11 +21,26 @@ int main(int argc, char *argv[]) {
         printf("[ERROR] Unable to load rom\n");
         return EXIT_FAILURE;
     } 
-
     printf("[OK] Rom is Up and Running!\n");
 
+    u32 last_time = SDL_GetTicks();
+    u32 timer_interval = 1000 / 60;
     while (chip8.state != QUIT) {
+         // Fetch Inputs
         sdl_ehandler(&chip8);
+
+        // Update Timers
+        /*
+        u32 current_time = SDL_GetTicks();
+        if (current_time - last_time >= timer_interval) {
+            last_time = current_time;
+            update_timers(&chip8);
+            last_time = current_time;
+        }
+        */
+       update_timers(&chip8);
+
+        // Execute CPU Cycle
         cpu_cycle(&chip8);
 
         if (chip8.draw_flag) {
@@ -34,7 +48,7 @@ int main(int argc, char *argv[]) {
             chip8.draw_flag = 0;
         }
 
-        SDL_Delay(16.67); // 16.67 ms (60 FPS)
+        SDL_Delay(16); // 16.67 ms (60 FPS)
     }
 
     stop_interface(&interface);

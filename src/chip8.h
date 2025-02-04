@@ -2,6 +2,7 @@
 #define CHIP8_H
 
 #include "utils.h"
+#include <stdbool.h>
 
 enum STATE 
 {
@@ -25,12 +26,14 @@ typedef struct
     u8 keypad[16];
     u8 draw_flag;
     u8 sound_flag;
+    bool increment_pc;
 } chip8_t;
 
 // Chip8 Functions
 void init_cpu(chip8_t *chip8);
 u8 load_rom(const char* rom_path, chip8_t *chip8);
 void cpu_cycle(chip8_t *chip8);
+void update_timers(chip8_t *chip8);
 
 // Debug
 void print_memory(const chip8_t *chip8);
