@@ -2,9 +2,9 @@
 
 Basically the hello world equivalent of emulator develpment. This is a warmup for developing a Z80/6502 Emulator, so I hope you enjoy it!
 
-## Changelog (Version 1.4.4)
+## Changelog (Version 1.4.5)
 
-Completed most Configurable Quirks (Uncomment in main.c to enable, DISPWAIT and CLIP coming soon)
+Bug Fixes/Refactoring, plus the beginnings of a SChip Implementation. Likely will try to port this to the TI 84+ CE before I come back to implement Super Chip8.
 
 ## Installation  
 
@@ -14,7 +14,7 @@ Once SDL3 is installed on your system, follow these steps to install and run the
 git clone
 cd CHIP8-EMU
 make clean && make
-./bin/chip8
+./bin/chip8 ./path/to/rom
 ```  
 
 ## Roadmap  
@@ -24,7 +24,7 @@ I do not have any plans to implement Audio at this time, as I want to end up por
 - [x] Improve Input Delay
 - [x] Load Roms from the Command Line
 - [x] Opcode Function Pointers
-- [ ] Super Chip-48 Support
+- [ ] SCHIP 1.0/1.1 Support
 - [ ] TI-84 Plus CE Port
 - [ ] GUI Rom Loading & Configuration
 

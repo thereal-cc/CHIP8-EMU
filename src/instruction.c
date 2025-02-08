@@ -111,7 +111,6 @@ void chip8_op_8(chip8_t *chip8, u16 opcode, u16 x, u16 y) {
             carry = chip8->V_register[x] >= chip8->V_register[y];
             chip8->V_register[x] = (chip8->V_register[x] - chip8->V_register[y]) & 0xFF;
             chip8->V_register[0xF] = carry;
-            //debug_print("VF: %X\n", chip8->V_register[0xF]);
             break;
         case 0x06: // Vx = Vx SHR 1
             debug_print("[OK] 0x%X: 8xy6\n", opcode);
@@ -168,18 +167,19 @@ void chip8_op_D(chip8_t *chip8, u16 opcode, u16 x, u16 y) {
 
     // Get Size, X/Y Coordinates, Set Collision to 0
     u8 sprite_size = opcode & 0x000F;
-    u8 x_coord = chip8->V_register[x] % 64;
-    u8 y_coord = chip8->V_register[y] % 32;
+    u8 x_coord = chip8->V_register[x] % chip8->horizontal_res;
+    u8 y_coord = chip8->V_register[y] % chip8->vertical_res;
+    u8 bit = 8;
     u8 pixel;
 
     for (u8 j = 0; j < sprite_size; j++) {
-        if (y_coord + j >= V_RES) break;
+        if (y_coord + j >= chip8->vertical_res) break;
         pixel = chip8->memory[chip8->I_register + j];
         // Each Bit in the Byte
-        for (u8 i = 0; i < 8; i++) {
-            if (x_coord + i >= H_RES) break;
+        for (u8 i = 0; i < bit; i++) {
+            if (x_coord + i >= chip8->horizontal_res) break;
             if ((pixel & (0x80 >> i)) != 0) {
-                u16 buffer_index = (x_coord + i) + ((y_coord + j) * H_RES);
+                u16 buffer_index = (x_coord + i) + ((y_coord + j) * chip8->horizontal_res);
                 if (chip8->buffer[buffer_index]) {
                     chip8->V_register[0xF] = 1;
                 }
@@ -238,7 +238,13 @@ void chip8_op_F(chip8_t *chip8, u16 opcode, u16 x, u16 y) {
             break;
         case 0x0029: // I = Location of Sprite for digit V[x]
             debug_print("[OK] 0x%X: Fx29\n", opcode);
-            chip8->I_register = chip8->V_register[x] * 5;
+            // SChip Behavior
+            u8 digit = chip8->V_register[x] & 0x0F;
+            if ((chip8->V_register[x] >> 4) == 1) { 
+                chip8->I_register = chip8->V_register[x] + (digit * 10);
+                break;
+            }
+            chip8->I_register = chip8->V_register[x] + (digit * 5);
             break;
         case 0x0033: // Store BCD representation of Vx in memory locations I, I+1, and I+2.
             debug_print("[OK] 0x%X: Fx33\n", opcode);

@@ -4,7 +4,7 @@
 #include <string.h>
 #include <stdio.h>
 
-u8 fontset[80] = 
+u8 full_fontset[240] = 
 {
     0xF0, 0x90, 0x90, 0x90, 0xF0,  // 0
     0x20, 0x60, 0x20, 0x20, 0x70,  // 1
@@ -21,34 +21,35 @@ u8 fontset[80] =
     0xF0, 0x80, 0x80, 0x80, 0xF0,  // C
     0xE0, 0x90, 0x90, 0x90, 0xE0,  // D
     0xF0, 0x80, 0xF0, 0x80, 0xF0,  // E
-    0xF0, 0x80, 0xF0, 0x80, 0x80   // F
+    0xF0, 0x80, 0xF0, 0x80, 0x80,  // F
+
+    // high-res mode font sprites (0-9)
+    0x3C, 0x7E, 0xE7, 0xC3, 0xC3, 0xC3, 0xC3, 0xE7, 0x7E, 0x3C, 
+    0x18, 0x38, 0x58, 0x18, 0x18, 0x18, 0x18, 0x18, 0x18, 0x3C,
+    0x3E, 0x7F, 0xC3, 0x06, 0x0C, 0x18, 0x30, 0x60, 0xFF, 0xFF,
+    0x3C, 0x7E, 0xC3, 0x03, 0x0E, 0x0E, 0x03, 0xC3, 0x7E, 0x3C,
+    0x06, 0x0E, 0x1E, 0x36, 0x66, 0xC6, 0xFF, 0xFF, 0x06, 0x06,
+    0xFF, 0xFF, 0xC0, 0xC0, 0xFC, 0xFE, 0x03, 0xC3, 0x7E, 0x3C,
+    0x3E, 0x7C, 0xC0, 0xC0, 0xFC, 0xFE, 0xC3, 0xC3, 0x7E, 0x3C,
+    0xFF, 0xFF, 0x03, 0x06, 0x0C, 0x18, 0x30, 0x60, 0x60, 0x60,
+    0x3C, 0x7E, 0xC3, 0xC3, 0x7E, 0x7E, 0xC3, 0xC3, 0x7E, 0x3C,
+    0x3C, 0x7E, 0xC3, 0xC3, 0x7F, 0x3F, 0x03, 0x03, 0x3E, 0x7C
 };
+
+
 
 void init_cpu(chip8_t *chip8) 
 {
     srandom((u8)time(NULL));
-    memcpy(chip8->memory, fontset, sizeof(fontset)); // Copy Font into Memory
+    memcpy(chip8->memory, full_fontset, sizeof(full_fontset)); // Copy Font into Memory
 
     chip8->pc = 0x200;
     chip8->state = RUNNING;
     chip8->increment_pc = true;
+    chip8->horizontal_res = H_RES;
+    chip8->vertical_res = V_RES;
 
     initialize_opcode_table();
-}
-
-u8 load_rom(const char* rom_path, chip8_t *chip8) 
-{
-    u8 status = -1;
-    FILE *fptr = fopen(rom_path, "rb");
-    if (fptr == NULL)
-    {
-        return status;
-    }
-
-    fread(chip8->memory + chip8->pc, sizeof(char), sizeof(chip8->memory) - chip8->pc, fptr);
-    status = 1;
-    fclose(fptr);
-    return status;
 }
 
 void cpu_cycle(chip8_t *chip8) 
@@ -76,6 +77,51 @@ void update_timers(chip8_t *chip8)
         chip8->sound_timer -= 1;
         if (chip8->sound_timer == 0) chip8->sound_flag += 1;
     }
+}
+
+/* Filesystem Functions */
+
+u8 load_rom(const char* rom_path, chip8_t *chip8) 
+{
+    u8 status = -1;
+    FILE *fptr = fopen(rom_path, "rb");
+    if (fptr == NULL)
+    {
+        return status;
+    }
+
+    fread(chip8->memory + chip8->pc, sizeof(char), sizeof(chip8->memory) - chip8->pc, fptr);
+    status = 0;
+    fclose(fptr);
+    return status;
+}
+
+u8 load_RPLFlags(chip8_t *chip8) 
+{
+    FILE *file = fopen("rpl_flags.bin", "wb");
+    if (file) {
+        fread(chip8->rpl_flags, sizeof(uint8_t), 8, file);
+        fclose(file);
+        return 0;
+    } else {
+        printf("ERROR: Could not load rpl_flags.bin");
+    }
+
+    return 1;
+}
+
+u8 save_RPLFlags(chip8_t *chip8) 
+{
+    FILE *file = fopen("rpl_flags.bin", "wb");
+    if (file) {
+        fwrite(chip8->rpl_flags, sizeof(uint8_t), 8, file);
+        fclose(file);
+        return 0;
+    } else {
+        printf("ERROR: Could not save rpl_flags.bin");
+    }
+
+    return 1;
 }
 
 /* Quirk Commands */

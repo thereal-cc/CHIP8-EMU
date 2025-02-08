@@ -2,25 +2,25 @@
 #include "utils.h"
 
 void init_interface(interface_t *interface) {
-    interface->extended = false;
+    interface->render_scale = LOW_RES_SCALE;
     interface->render_width = H_RES;
     interface->render_height = V_RES;
 
-    if (!SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO)) {
-        debug_print("SDL_Init Error: %s\n", SDL_GetError());
+    if (!SDL_Init(SDL_INIT_VIDEO)) {
+        SDL_Log("SDL_Init Error: %s\n", SDL_GetError());
         exit(EXIT_FAILURE);
     }
 
-    interface->window = SDL_CreateWindow("Chip-8", interface->render_width * WINDOW_SCALE_REG, interface->render_height * WINDOW_SCALE_REG, 0);
+    interface->window = SDL_CreateWindow("Chip-8", interface->render_width * LOW_RES_SCALE, interface->render_height * LOW_RES_SCALE, 0);
     if (!interface->window) {
-        debug_print("SDL_Window Error: %s\n", SDL_GetError());
+        SDL_Log("SDL_Window Error: %s\n", SDL_GetError());
         SDL_Quit();
         exit(EXIT_FAILURE);
     }
 
     interface->renderer = SDL_CreateRenderer(interface->window, NULL);
     if (!interface->renderer) {
-        debug_print("SDL_Renderer Error: %s\n", SDL_GetError());
+        SDL_Log("SDL_Renderer Error: %s\n", SDL_GetError());
         SDL_DestroyWindow(interface->window);
         SDL_Quit();
         exit(EXIT_FAILURE);
@@ -86,7 +86,13 @@ void sdl_ehandler(chip8_t *chip8) {
     }
 }
 
-void draw(interface_t *interface, u8 *buffer) {
+void draw(interface_t *interface, u8 *buffer, u8 horizontal, u8 vertical) {
+    // Update Interface Render Width
+    interface->render_width = horizontal;
+    interface->render_height = vertical;
+    //if ((interface->render_width != H_RES) && (interface->render_height != V_RES)) interface->render_scale = HIGH_RES_SCALE;
+    //else interface->render_scale = LOW_RES_SCALE;
+
     SDL_SetRenderDrawColor(interface->renderer, 0, 0, 0, 255);
 
     // Clear Current Rendering Target
@@ -95,12 +101,12 @@ void draw(interface_t *interface, u8 *buffer) {
 
     for (u8 y = interface->render_offset_y; y < interface->render_height; y++) {
         for (u8 x = interface->render_offset_x; x < interface->render_width; x++) {
-            if (buffer[x + (y * 64)]) {
+            if (buffer[x + (y * interface->render_width)]) {
                 SDL_FRect rect;
-                rect.x = x * WINDOW_SCALE_REG;
-                rect.y = y * WINDOW_SCALE_REG;
-                rect.w = WINDOW_SCALE_REG;
-                rect.h = WINDOW_SCALE_REG;
+                rect.x = x * interface->render_scale;
+                rect.y = y * interface->render_scale;
+                rect.w = interface->render_scale;
+                rect.h = interface->render_scale;
 
                 SDL_RenderFillRect(interface->renderer, &rect);
             }
