@@ -40,13 +40,11 @@ void update_timers(chip8_t *chip8);
 
 // Filesystem Functions
 u8 load_rom(const char* rom_path, chip8_t *chip8);
-u8 load_RPLFlags(chip8_t *chip8);
-u8 save_RPLFlags(chip8_t *chip8);
 
 // Quirk Commands
 void enableQuirk(chip8_t *chip8, u8 quirk);
 void disableQuirk(chip8_t *chip8, u8 quirk);
-u8 isQuirkEnabled(chip8_t *chip8, u8 quirk);
+bool isQuirkEnabled(chip8_t *chip8, u8 quirk);
 
 // Debug
 void print_memory(const chip8_t *chip8);

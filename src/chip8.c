@@ -36,8 +36,6 @@ u8 full_fontset[240] =
     0x3C, 0x7E, 0xC3, 0xC3, 0x7F, 0x3F, 0x03, 0x03, 0x3E, 0x7C
 };
 
-
-
 void init_cpu(chip8_t *chip8) 
 {
     srandom((u8)time(NULL));
@@ -80,7 +78,6 @@ void update_timers(chip8_t *chip8)
 }
 
 /* Filesystem Functions */
-
 u8 load_rom(const char* rom_path, chip8_t *chip8) 
 {
     u8 status = -1;
@@ -96,34 +93,6 @@ u8 load_rom(const char* rom_path, chip8_t *chip8)
     return status;
 }
 
-u8 load_RPLFlags(chip8_t *chip8) 
-{
-    FILE *file = fopen("rpl_flags.bin", "wb");
-    if (file) {
-        fread(chip8->rpl_flags, sizeof(uint8_t), 8, file);
-        fclose(file);
-        return 0;
-    } else {
-        printf("ERROR: Could not load rpl_flags.bin");
-    }
-
-    return 1;
-}
-
-u8 save_RPLFlags(chip8_t *chip8) 
-{
-    FILE *file = fopen("rpl_flags.bin", "wb");
-    if (file) {
-        fwrite(chip8->rpl_flags, sizeof(uint8_t), 8, file);
-        fclose(file);
-        return 0;
-    } else {
-        printf("ERROR: Could not save rpl_flags.bin");
-    }
-
-    return 1;
-}
-
 /* Quirk Commands */
 void enableQuirk(chip8_t *chip8, u8 quirk) 
 {
@@ -135,7 +104,7 @@ void disableQuirk(chip8_t *chip8, u8 quirk)
     chip8->quirks &= ~(1 << quirk);
 }
 
-u8 isQuirkEnabled(chip8_t *chip8, u8 quirk) 
+bool isQuirkEnabled(chip8_t *chip8, u8 quirk) 
 {
     return (chip8->quirks & (1 << quirk)) != 0;
 }

@@ -1,8 +1,9 @@
 #include "interface.h"
 #include "utils.h"
 
-void init_interface(interface_t *interface) {
-    interface->render_scale = LOW_RES_SCALE;
+void init_interface(interface_t *interface) 
+{
+    interface->render_scale = SCALE;
     interface->render_width = H_RES;
     interface->render_height = V_RES;
 
@@ -11,7 +12,7 @@ void init_interface(interface_t *interface) {
         exit(EXIT_FAILURE);
     }
 
-    interface->window = SDL_CreateWindow("Chip-8", interface->render_width * LOW_RES_SCALE, interface->render_height * LOW_RES_SCALE, 0);
+    interface->window = SDL_CreateWindow("Chip-8", interface->render_width * SCALE, interface->render_height * SCALE, 0);
     if (!interface->window) {
         SDL_Log("SDL_Window Error: %s\n", SDL_GetError());
         SDL_Quit();
@@ -27,7 +28,8 @@ void init_interface(interface_t *interface) {
     }
 }
 
-void sdl_ehandler(chip8_t *chip8) {
+void sdl_ehandler(chip8_t *chip8) 
+{
     SDL_Event event;
     while (SDL_PollEvent(&event)) {
         switch (event.type) {
@@ -36,6 +38,7 @@ void sdl_ehandler(chip8_t *chip8) {
                 break;
             case SDL_EVENT_KEY_DOWN:
                 switch(event.key.key){
+                    // Chip8 Keypad
                     case SDLK_1:chip8->keypad[0x1] = true; break;
                     case SDLK_2:chip8->keypad[0x2] = true; break;
                     case SDLK_3:chip8->keypad[0x3] = true; break;
@@ -55,6 +58,56 @@ void sdl_ehandler(chip8_t *chip8) {
                     case SDLK_X:chip8->keypad[0x0] = true; break;
                     case SDLK_C:chip8->keypad[0xb] = true; break;
                     case SDLK_V:chip8->keypad[0xf] = true; break;
+
+                    // Turn Quirks On/Off
+                    case SDLK_F1:
+                    if (!isQuirkEnabled(chip8, QUIRK_VF_RESET)) {
+                        enableQuirk(chip8, QUIRK_VF_RESET);
+                        break;
+                    }
+                    disableQuirk(chip8, QUIRK_VF_RESET);
+                    break;
+
+                    case SDLK_F2:
+                    if (!isQuirkEnabled(chip8, QUIRK_LOADS)) {
+                        enableQuirk(chip8, QUIRK_LOADS);
+                        break;
+                    }
+                    disableQuirk(chip8, QUIRK_LOADS);
+                    break;
+
+                    case SDLK_F3:
+                    if (!isQuirkEnabled(chip8, QUIRK_DISPWAIT)) {
+                        enableQuirk(chip8, QUIRK_VF_RESET);
+                        break;
+                    }
+                    disableQuirk(chip8, QUIRK_VF_RESET);
+                    break;
+
+                    case SDLK_F4:
+                    if (!isQuirkEnabled(chip8, QUIRK_CLIP)) {
+                        enableQuirk(chip8, QUIRK_CLIP);
+                        break;
+                    }
+                    disableQuirk(chip8, QUIRK_CLIP);
+                    break;
+
+                    case SDLK_F5:
+                    if (!isQuirkEnabled(chip8, QUIRK_SHIFT)) {
+                        enableQuirk(chip8, QUIRK_SHIFT);
+                        break;
+                    }
+                    disableQuirk(chip8, QUIRK_SHIFT);
+                    break;
+
+                    case SDLK_F6:
+                    if (!isQuirkEnabled(chip8, QUIRK_JUMP)) {
+                        enableQuirk(chip8, QUIRK_JUMP);
+                        break;
+                    }
+                    disableQuirk(chip8, QUIRK_JUMP);
+                    break;
+
                     default: break;
                 }
                 break;
@@ -86,13 +139,8 @@ void sdl_ehandler(chip8_t *chip8) {
     }
 }
 
-void draw(interface_t *interface, u8 *buffer, u8 horizontal, u8 vertical) {
-    // Update Interface Render Width
-    interface->render_width = horizontal;
-    interface->render_height = vertical;
-    //if ((interface->render_width != H_RES) && (interface->render_height != V_RES)) interface->render_scale = HIGH_RES_SCALE;
-    //else interface->render_scale = LOW_RES_SCALE;
-
+void draw_chip8(interface_t *interface, u8 *buffer) 
+{
     SDL_SetRenderDrawColor(interface->renderer, 0, 0, 0, 255);
 
     // Clear Current Rendering Target
@@ -116,7 +164,8 @@ void draw(interface_t *interface, u8 *buffer, u8 horizontal, u8 vertical) {
     SDL_RenderPresent(interface->renderer);
 }
 
-void stop_interface(interface_t *interface) {
+void stop_interface(interface_t *interface) 
+{
     SDL_DestroyRenderer(interface->renderer);
     SDL_DestroyWindow(interface->window);
     SDL_Quit();

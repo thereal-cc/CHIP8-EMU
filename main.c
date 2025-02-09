@@ -1,5 +1,6 @@
 #include "src/chip8.h"
 #include "src/interface.h"
+#include "src/tinyfiledialogs.h"
 
 int main(int argc, char *argv[]) {
     // Initialize CPU and Display
@@ -16,22 +17,22 @@ int main(int argc, char *argv[]) {
     SDL_Log("[OK] Interface is Up and Running!\n");
 
     // Load Rom
-    char *rompath = (argc != 2) ? (SDL_Log("No File Loaded, Using Test Rom\n"), "tests/1-chip8-logo.ch8") : argv[1];
+    const char *filters[] = { "*.ch8" };
+    const char *rompath = tinyfd_openFileDialog("Open Rom", "", 1, filters, "Chip8 Files", 0);
+    if (rompath == NULL) {
+        SDL_Log("[ERROR] No file selected or an error occured");
+        stop_interface(&interface);
+        return EXIT_FAILURE;
+    }
+
     u8 status = load_rom(rompath, &chip8);
     if (status != 0) {
         SDL_Log("[ERROR] Unable to load rom\n");
         stop_interface(&interface);
         return EXIT_FAILURE;
     } 
-    SDL_Log("[OK] Rom is Up and Running!\n");
 
-    /* Uncomment to Enable Quirks */
-    //enableQuirk(&chip8, QUIRK_VF_RESET);
-    //enableQuirk(&chip8, QUIRK_LOADS);
-    //enableQuirk(&chip8, QUIRK_DISPWAIT);
-    //enableQuirk(&chip8, QUIRK_CLIP);
-    enableQuirk(&chip8, QUIRK_SHIFT);
-    enableQuirk(&chip8, QUIRK_JUMP);
+    SDL_Log("[OK] Rom is Up and Running!\n");
 
     u32 last_time = SDL_GetTicks();
     u32 timer_interval = 1000 / 60;
@@ -54,7 +55,7 @@ int main(int argc, char *argv[]) {
         }   
 
         // Display Buffer
-        draw(&interface, chip8.buffer, chip8.horizontal_res, chip8.vertical_res);
+        draw_chip8(&interface, chip8.buffer);
         chip8.draw_flag = 0;
 
         SDL_Delay(16); // 16 ms (Roughly 60 FPS)
