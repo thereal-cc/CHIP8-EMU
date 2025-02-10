@@ -3,16 +3,12 @@
 
 void init_interface(interface_t *interface) 
 {
-    interface->render_scale = SCALE;
-    interface->render_width = H_RES;
-    interface->render_height = V_RES;
-
     if (!SDL_Init(SDL_INIT_VIDEO)) {
         SDL_Log("SDL_Init Error: %s\n", SDL_GetError());
         exit(EXIT_FAILURE);
     }
 
-    interface->window = SDL_CreateWindow("Chip-8", interface->render_width * SCALE, interface->render_height * SCALE, 0);
+    interface->window = SDL_CreateWindow("Chip-8", H_RES * SCALE, V_RES * SCALE, 0);
     if (!interface->window) {
         SDL_Log("SDL_Window Error: %s\n", SDL_GetError());
         SDL_Quit();
@@ -28,7 +24,7 @@ void init_interface(interface_t *interface)
     }
 }
 
-void sdl_ehandler(chip8_t *chip8) 
+void input_handler(chip8_t *chip8) 
 {
     SDL_Event event;
     while (SDL_PollEvent(&event)) {
@@ -147,14 +143,14 @@ void draw_chip8(interface_t *interface, u8 *buffer)
     SDL_RenderClear(interface->renderer);
     SDL_SetRenderDrawColor(interface->renderer, 255, 255, 255, 255);
 
-    for (u8 y = interface->render_offset_y; y < interface->render_height; y++) {
-        for (u8 x = interface->render_offset_x; x < interface->render_width; x++) {
-            if (buffer[x + (y * interface->render_width)]) {
+    for (u8 y = 0; y < V_RES; y++) {
+        for (u8 x = 0; x < H_RES; x++) {
+            if (buffer[x + (y * H_RES)]) {
                 SDL_FRect rect;
-                rect.x = x * interface->render_scale;
-                rect.y = y * interface->render_scale;
-                rect.w = interface->render_scale;
-                rect.h = interface->render_scale;
+                rect.x = x * SCALE;
+                rect.y = y * SCALE;
+                rect.w = SCALE;
+                rect.h = SCALE;
 
                 SDL_RenderFillRect(interface->renderer, &rect);
             }

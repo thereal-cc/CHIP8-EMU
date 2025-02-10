@@ -2,7 +2,7 @@
 
 Basically the hello world equivalent of emulator develpment. This is a warmup for developing a Z80/6502 Emulator, so I hope you enjoy it!
 
-## Changelog (Version 1.5.1)
+## Changelog (Version 1.5.2)
 
 Rom Loading is now done from system file manager, meaning path's do not have to be pasted into command line. Emulator only excepts .ch8 files. Rom Selection uses [TinyFileDialogs](https://sourceforge.net/projects/tinyfiledialogs/).  
 Additionally, Quirks can now be turned on/off using function keys. Refer to this chart below (note all quirks are off by default)  

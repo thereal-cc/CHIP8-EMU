@@ -2,7 +2,7 @@
 #include "src/interface.h"
 #include "src/tinyfiledialogs.h"
 
-int main(int argc, char *argv[]) {
+int main() {
     // Initialize CPU and Display
     chip8_t chip8;
     interface_t interface;
@@ -38,7 +38,7 @@ int main(int argc, char *argv[]) {
     u32 timer_interval = 1000 / 60;
     while (chip8.state != QUIT) {
          // Fetch Inputs
-        sdl_ehandler(&chip8);
+        input_handler(&chip8);
 
         // Update Timers
         u32 current_time = SDL_GetTicks();
