@@ -2,25 +2,21 @@
 #define UTILS_H
 
 #include <stdlib.h>
+#include <stdint.h>
 #include <stdbool.h>
 
-#define debug_print(fmt, ...)                         \
-    do {                                              \
-        if (DEBUG) fprintf(stderr, fmt, __VA_ARGS__); \
-    } while (0)
+// AppVar Length
+#define ROM_NAME_SIZE 20
 
 // Display
 #define H_RES 64
 #define V_RES 32
-#define SUPER_H_RES 128
-#define SUPER_V_RES 64
-#define DEBUG 0
 
 // Chip 8
 #define STACK_SIZE 48
-#define MAX_MEMORY 0x1000
-#define CYCLES_PER_SEC 11
-#define RPL_FLAG_COUNT 8
+#define MAX_MEMORY 4096
+#define CYCLES_PER_SEC 30
+#define SCALE 5
 
 // Quirks
 #define QUIRK_VF_RESET 0

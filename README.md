@@ -1,40 +1,28 @@
-# Chip8-EMU
+# Chip8-CE (Version 1.0)
 
-Basically the hello world equivalent of emulator develpment. This is a warmup for developing a Z80/6502 Emulator, so I hope you enjoy it!
-
-## Changelog (Version 1.5.2)
-
-Rom Loading is now done from system file manager, meaning path's do not have to be pasted into command line. Emulator only excepts .ch8 files. Rom Selection uses [TinyFileDialogs](https://sourceforge.net/projects/tinyfiledialogs/).  
-Additionally, Quirks can now be turned on/off using function keys. Refer to this chart below (note all quirks are off by default)  
-F1: Reset Flag Register (VF) to Zero  
-F2: Increment Index Register (Fx55, Fx65)  
-F3: Wait for Vertical Sync Interrupt  
-F4: Clip Sprites instead of Wrapping  
-F5: Shift Operations only operate on VX  
-F6: BNNN uses VX instead of V0  
+Port of my CHIP8 Emulator to the TI-84 Plus CE. Not running at 100% speed yet, which I attribute to the fact that it's written in C and not eZ80 assembly. To load roms, upload your .ch8 files to [this website](https://leong.sh/chip84ceromcreator/) and make sure the name is less then 20 characters. From there, just load the Appvar onto your calculator, and type in its name when prompted.  
+Lastly, Quirks can be adjusted using the following keys:  
+Math: Reset Flag Register (VF) to Zero  
+Apps: Increment Index Register (Fx55, Fx65)  
+PRGM: Wait for Vertical Sync Interrupt  
+VARS: Clip Sprites instead of Wrapping  
+Clear: Shift Operations only operate on VX  
+Power (^): BNNN uses VX instead of V0  
 
 ## Installation  
 
-Once SDL3 is installed on your system, follow these steps to install and run the Emulator:  
+Once the CEdev toolchain is installed, you can clone this repository and run the following commands to compile the emulator.
 
 ```bash  
 git clone
-cd CHIP8-EMU
+cd Chip8-CE
 make clean && make
-./bin/chip8
 ```  
 
 ## Roadmap  
 
-I do not have any plans to implement Audio at this time, as I want to end up porting this to the TI 84 Plus CE, which obviously has no sound. Besides that, here's a few other features I'd want to add.
-
-- [x] Improve Input Delay
-- [x] Load Roms from the Command Line
-- [x] Opcode Function Pointers
-- [ ] SCHIP 1.0/1.1 Support
-- [ ] TI-84 Plus CE Port
-- [x] GUI Rom Loading & Configuration
+My two biggest goals at this point are improving speed and adding SChip 1.1 support. I'm also hoping to add a better UI for adjusting quirks and settings in the future.
 
 ## Credits/Thanks  
 
-Thank you to ZX Dunny, AEstus Vitae, Janitor Raus, and the EmuDev discord for their tough love and help with this project.
+Thank you to ZX Dunny, AEstus Vitae, Janitor Raus, and the EmuDev discord for their tough love and help with this project. 
