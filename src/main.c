@@ -1,8 +1,9 @@
 #include <string.h>
 #include "sys/timers.h"
 #include "ti/screen.h"
-#include "chip8.h"
 #include "time.h"
+
+#include "chip8.h"
 
 int main() {
     os_ClrHomeFull();
@@ -49,7 +50,7 @@ int main() {
         }   
 
         // Display Buffer
-        draw_chip8(chip8->buffer);
+        draw_chip8(chip8);
         chip8->draw_flag = 0;
 
         //delay(6); // 16 ms (Roughly 60 FPS)

@@ -39,7 +39,7 @@ void init_cpu(chip8_t *chip8);
 void cpu_cycle(chip8_t *chip8);
 void update_timers(chip8_t *chip8);
 void input_handler(chip8_t *chip8);
-void draw_chip8(u8 *buffer);
+void draw_chip8(chip8_t *chip8);
 
 // Filesystem Functions
 u8 load_rom(chip8_t *chip8);

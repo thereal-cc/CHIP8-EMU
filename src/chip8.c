@@ -187,16 +187,26 @@ void input_handler(chip8_t *chip8)
     }
 }
 
-void draw_chip8(u8 *buffer) 
+void draw_chip8(chip8_t *chip8) 
 {
     gfx_ZeroScreen();
-    gfx_SetColor(0xFF);
+    // Draw Quriks
+    for (u8 i = 0; i < 6; i++) {
+        gfx_SetColor(0xFF);
+        if (isQuirkEnabled(chip8, i)) {
+            gfx_SetColor(0x06);
+        }
 
+        gfx_FillRectangle(40 * i + 55, 10, 10, 10);
+    }
+
+    
+    gfx_SetColor(0xFF);
     u8 y_offset = V_RES + 8;
     
     for (u8 y = 0; y < V_RES; y++) {
         for (u8 x = 0; x < H_RES; x++) {
-            if (buffer[x + (y * H_RES)]) {
+            if (chip8->buffer[x + (y * H_RES)]) {
                 gfx_FillRectangle(x * SCALE, (y * SCALE) + y_offset, SCALE, SCALE);
             }
         }
