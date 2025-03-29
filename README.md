@@ -2,7 +2,9 @@
 
 Port of my CHIP8 Emulator to the TI-84 Plus CE. Not running at 100% speed yet, which I attribute to the fact that it's written in C and not eZ80 assembly. To load roms, upload your .ch8 files to [this website](https://leong.sh/chip84ceromcreator/) and make sure the name is less then 20 characters. From there, just load the Appvar onto your calculator, and type in its name when prompted.  
 
-## Changelog: Version 1.1
+## Changelog: Version 1.2
+
+- Fixed Timer Quirks (Emulator now runs at 60Hz)
 
 Quirks can be adjusted using the following keys:  
 Math: Reset Flag Register (VF) to Zero  

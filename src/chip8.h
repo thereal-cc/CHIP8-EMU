@@ -1,12 +1,16 @@
 #ifndef CHIP8_H
 #define CHIP8_H
 
+#include <string.h>
+#include <time.h>
+
 #include "utils.h"
 #include "debug.h"
 #include "sys/timers.h"
 #include "graphx.h"
 #include "keypadc.h"
 #include "fileioc.h"
+#include "ti/screen.h"
 
 typedef enum STATE 
 {

@@ -17,6 +17,7 @@
 #define MAX_MEMORY 4096
 #define CYCLES_PER_SEC 30
 #define SCALE 5
+#define TIMER_FREQUENCY 60
 
 // Quirks
 #define QUIRK_VF_RESET 0
