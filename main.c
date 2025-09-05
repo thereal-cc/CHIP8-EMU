@@ -43,7 +43,6 @@ int main() {
         // Update Timers
         u32 current_time = SDL_GetTicks();
         if (current_time - last_time >= timer_interval) {
-            last_time = current_time;
             update_timers(&chip8);
             last_time = current_time;
         }

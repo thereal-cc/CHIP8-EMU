@@ -22,7 +22,7 @@ void initialize_opcode_table() {
     opcode_table[0xF] = chip8_op_F;
 }
 
-void chip8_op_0(chip8_t *chip8, u16 opcode, u16 x, u16 y) {
+void chip8_op_0(chip8_t *chip8, u16 opcode, u8 x, u8 y) {
     switch (opcode) {
         case 0x00E0: // Clear Display
             debug_print("[OK] 0x%X: 00E0\n", opcode);
@@ -39,46 +39,46 @@ void chip8_op_0(chip8_t *chip8, u16 opcode, u16 x, u16 y) {
     }
 }
 
-void chip8_op_1(chip8_t *chip8, u16 opcode, u16 x, u16 y) {
+void chip8_op_1(chip8_t *chip8, u16 opcode, u8 x, u8 y) {
     debug_print("[OK] 0x%X: 1nnn\n", opcode);
     chip8->pc = opcode & 0x0FFF;
     chip8->increment_pc = false;
 }
 
-void chip8_op_2(chip8_t *chip8, u16 opcode, u16 x, u16 y) {
+void chip8_op_2(chip8_t *chip8, u16 opcode, u8 x, u8 y) {
     debug_print("[OK] 0x%X: 2nnn\n", opcode);
     chip8->stack[chip8->sp++] = chip8->pc + 2;
     chip8->pc = opcode & 0x0FFF;
     chip8->increment_pc = false;
 }
 
-void chip8_op_3(chip8_t *chip8, u16 opcode, u16 x, u16 y) {
+void chip8_op_3(chip8_t *chip8, u16 opcode, u8 x, u8 y) {
     debug_print("[OK] 0x%X: 3xkk\n", opcode);
     if (chip8->V_register[x] == (opcode & 0x00FF)) chip8->pc += 2;
 }
 
-void chip8_op_4(chip8_t *chip8, u16 opcode, u16 x, u16 y) {
+void chip8_op_4(chip8_t *chip8, u16 opcode, u8 x, u8 y) {
     debug_print("[OK] 0x%X: 4xkk\n", opcode);
     if (chip8->V_register[x] != (opcode & 0x00FF)) chip8->pc += 2;
 }
 
-void chip8_op_5(chip8_t *chip8, u16 opcode, u16 x, u16 y) {
+void chip8_op_5(chip8_t *chip8, u16 opcode, u8 x, u8 y) {
     debug_print("[OK] 0x%X: 5xy0\n", opcode);
     if (chip8->V_register[x] == chip8->V_register[y]) chip8->pc += 2;
 }
 
-void chip8_op_6(chip8_t *chip8, u16 opcode, u16 x, u16 y) {
+void chip8_op_6(chip8_t *chip8, u16 opcode, u8 x, u8 y) {
     debug_print("[OK] 0x%X: 6xkk\n", opcode);
     chip8->V_register[x] = (opcode & 0x00FF);
 }
 
-void chip8_op_7(chip8_t *chip8, u16 opcode, u16 x, u16 y) {
+void chip8_op_7(chip8_t *chip8, u16 opcode, u8 x, u8 y) {
     debug_print("[OK] 0x%X: 7xkk\n", opcode);
     u8 value = (opcode & 0x00FF);
     chip8->V_register[x] = (chip8->V_register[x] + value) & 0xFF;
 }
 
-void chip8_op_8(chip8_t *chip8, u16 opcode, u16 x, u16 y) {
+void chip8_op_8(chip8_t *chip8, u16 opcode, u8 x, u8 y) {
     bool carry;
     switch (opcode & 0x000F) {
         case 0x00: // Vx = Vy
@@ -138,48 +138,48 @@ void chip8_op_8(chip8_t *chip8, u16 opcode, u16 x, u16 y) {
     }
 }
 
-void chip8_op_9(chip8_t *chip8, u16 opcode, u16 x, u16 y) {
+void chip8_op_9(chip8_t *chip8, u16 opcode, u8 x, u8 y) {
     debug_print("[OK] 0x%X: 9xy0\n", opcode);
     if (chip8->V_register[x] != chip8->V_register[y]) chip8->pc += 2;
 }
 
-void chip8_op_A(chip8_t *chip8, u16 opcode, u16 x, u16 y) {
+void chip8_op_A(chip8_t *chip8, u16 opcode, u8 x, u8 y) {
     debug_print("[OK] 0x%X: Annn\n", opcode);
     chip8->I_register = (opcode & 0x0FFF);
 }
 
-void chip8_op_B(chip8_t *chip8, u16 opcode, u16 x, u16 y) {
+void chip8_op_B(chip8_t *chip8, u16 opcode, u8 x, u8 y) {
     debug_print("[OK] 0x%X: Bnnn\n", opcode);
     if (!isQuirkEnabled(chip8, QUIRK_JUMP)) chip8->pc = (opcode & 0x0FFF) + chip8->V_register[0];
     else chip8->pc = (opcode & 0x0FFF) + chip8->V_register[x];
     chip8->increment_pc = false;
 }
 
-void chip8_op_C(chip8_t *chip8, u16 opcode, u16 x, u16 y) {
+void chip8_op_C(chip8_t *chip8, u16 opcode, u8 x, u8 y) {
     debug_print("[OK] 0x%X: Cxkk\n", opcode);
     chip8->V_register[x] = (random() % 256) & (opcode & 0x00FF);
 }
 
-void chip8_op_D(chip8_t *chip8, u16 opcode, u16 x, u16 y) {
+void chip8_op_D(chip8_t *chip8, u16 opcode, u8 x, u8 y) {
     debug_print("[OK] 0x%X: Dxyn\n", opcode);
     chip8->draw_flag = 1;
     chip8->V_register[0xF] = 0;
 
     // Get Size, X/Y Coordinates, Set Collision to 0
     u8 sprite_size = opcode & 0x000F;
-    u8 x_coord = chip8->V_register[x] % chip8->horizontal_res;
-    u8 y_coord = chip8->V_register[y] % chip8->vertical_res;
+    u8 x_coord = chip8->V_register[x] % H_RES;
+    u8 y_coord = chip8->V_register[y] % V_RES;
     u8 bit = 8;
     u8 pixel;
 
     for (u8 j = 0; j < sprite_size; j++) {
-        if (y_coord + j >= chip8->vertical_res) break;
+        if (y_coord + j >= V_RES) break;
         pixel = chip8->memory[chip8->I_register + j];
         // Each Bit in the Byte
         for (u8 i = 0; i < bit; i++) {
-            if (x_coord + i >= chip8->horizontal_res) break;
+            if (x_coord + i >= H_RES) break;
             if ((pixel & (0x80 >> i)) != 0) {
-                u16 buffer_index = (x_coord + i) + ((y_coord + j) * chip8->horizontal_res);
+                u16 buffer_index = (x_coord + i) + ((y_coord + j) * H_RES);
                 if (chip8->buffer[buffer_index]) {
                     chip8->V_register[0xF] = 1;
                 }
@@ -190,7 +190,7 @@ void chip8_op_D(chip8_t *chip8, u16 opcode, u16 x, u16 y) {
     }
 }
 
-void chip8_op_E(chip8_t *chip8, u16 opcode, u16 x, u16 y) {
+void chip8_op_E(chip8_t *chip8, u16 opcode, u8 x, u8 y) {
     switch (opcode & 0x00FF) {
         case 0x009E: // Skip if key with value in Vx is pressed
             debug_print("[OK] 0x%X: Ex9E\n", opcode);
@@ -206,7 +206,7 @@ void chip8_op_E(chip8_t *chip8, u16 opcode, u16 x, u16 y) {
     }
 }
 
-void chip8_op_F(chip8_t *chip8, u16 opcode, u16 x, u16 y) {
+void chip8_op_F(chip8_t *chip8, u16 opcode, u8 x, u8 y) {
     switch(opcode & 0x00FF) {
         case 0x0007: // Vx = delay timer
             debug_print("[OK] 0x%X: Fx07\n", opcode);

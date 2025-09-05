@@ -26,6 +26,8 @@ void init_interface(interface_t *interface)
 
 void input_handler(chip8_t *chip8) 
 {
+    memset(chip8->keypad, 0, sizeof(chip8->keypad));
+
     SDL_Event event;
     while (SDL_PollEvent(&event)) {
         switch (event.type) {
@@ -74,10 +76,10 @@ void input_handler(chip8_t *chip8)
 
                     case SDLK_F3:
                     if (!isQuirkEnabled(chip8, QUIRK_DISPWAIT)) {
-                        enableQuirk(chip8, QUIRK_VF_RESET);
+                        enableQuirk(chip8, QUIRK_DISPWAIT);
                         break;
                     }
-                    disableQuirk(chip8, QUIRK_VF_RESET);
+                    disableQuirk(chip8, QUIRK_DISPWAIT);
                     break;
 
                     case SDLK_F4:
@@ -107,30 +109,6 @@ void input_handler(chip8_t *chip8)
                     default: break;
                 }
                 break;
-            case SDL_EVENT_KEY_UP:
-                switch(event.key.key){
-                    case SDLK_1:chip8->keypad[0x1] = false; break;
-                    case SDLK_2:chip8->keypad[0x2] = false; break;
-                    case SDLK_3:chip8->keypad[0x3] = false; break;
-                    case SDLK_4:chip8->keypad[0xc] = false; break;
-
-                    case SDLK_Q:chip8->keypad[0x4] = false; break;
-                    case SDLK_W:chip8->keypad[0x5] = false; break;
-                    case SDLK_E:chip8->keypad[0x6] = false; break;
-                    case SDLK_R:chip8->keypad[0xd] = false; break;
-
-                    case SDLK_A:chip8->keypad[0x7] = false; break;
-                    case SDLK_S:chip8->keypad[0x8] = false; break;
-                    case SDLK_D:chip8->keypad[0x9] = false; break;
-                    case SDLK_F:chip8->keypad[0xe] = false; break;
-
-                    case SDLK_Z:chip8->keypad[0xa] = false; break;
-                    case SDLK_X:chip8->keypad[0x0] = false; break;
-                    case SDLK_C:chip8->keypad[0xb] = false; break;
-                    case SDLK_V:chip8->keypad[0xf] = false; break;
-                    default:break;
-                }
-            break;
         }
     }
 }
