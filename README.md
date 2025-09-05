@@ -32,7 +32,7 @@ I do not have any plans to implement Audio at this time, as I want to end up por
 - [x] Load Roms from the Command Line
 - [x] Opcode Function Pointers
 - [ ] SCHIP 1.0/1.1 Support
-- [ ] TI-84 Plus CE Port
+- [x] TI-84 Plus CE Port
 - [x] GUI Rom Loading & Configuration
 
 ## Credits/Thanks  
